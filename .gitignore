@@ -5,19 +5,26 @@ Desktop.ini
 .vscode/
 .idea/
 *.iml
+*.iws
+*.ipr
 
 ### Java / Maven / Spring
-**/target/
-**/*.class
-**/*.log
-**/.classpath
-**/.project
-**/.settings/
+target/
+*.class
+*.log
+.classpath
+.project
+.settings/
+.factorypath
+.springBeans
+.sts4-cache
+.apt_generated
+HELP.md
+.mvn/wrapper/maven-wrapper.jar
 
 ### Secrets / local overrides
 .env
 .env.*
-**/application-local.properties
-**/application-local.yml
-**/application-local.yaml
-
+application-local.properties
+application-local.yml
+application-local.yaml
