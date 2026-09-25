@@ -17,6 +17,7 @@ import org.springframework.web.client.RestTemplate;
 import com.weather.domain.CityCoordinates;
 import com.weather.entity.HourlyWeatherResponseEntity;
 import com.weather.entity.OpenWeatherResponseEntity;
+import com.weather.exception.WeatherApiException;
 
 class WeatherProviderTest {
 
@@ -99,7 +100,7 @@ class WeatherProviderTest {
         server.expect(requestTo(startsWith(CURRENT_URL))).andRespond(withServerError());
 
         assertThatThrownBy(() -> provider.getWeather(coordinates))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("500");
+                .isInstanceOf(WeatherApiException.class)
+                .hasMessage("OpenWeather request failed (500)");
     }
 }

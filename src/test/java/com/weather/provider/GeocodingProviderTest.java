@@ -19,6 +19,7 @@ import org.springframework.web.client.RestTemplate;
 import com.weather.domain.WeatherRequestDetails;
 import com.weather.entity.GeocodingCoordinatesEntity;
 import com.weather.exception.CityNotFoundException;
+import com.weather.exception.WeatherApiException;
 
 class GeocodingProviderTest {
 
@@ -63,13 +64,14 @@ class GeocodingProviderTest {
     }
 
     @Test
-    void upstreamErrorIsWrapped() {
+    void invalidApiKeyGivesHelpfulError() {
         server.expect(requestTo(org.hamcrest.Matchers.startsWith(URL)))
                 .andRespond(withStatus(HttpStatus.UNAUTHORIZED));
 
         assertThatThrownBy(() -> provider.getCityCoordinates(city("London")))
-                .isInstanceOf(RuntimeException.class)
-                .hasMessageContaining("401");
+                .isInstanceOf(WeatherApiException.class)
+                .hasMessageContaining("401")
+                .hasMessageContaining("OPENWEATHER_API_KEY");
     }
 
     private static WeatherRequestDetails city(String name) {

@@ -13,7 +13,7 @@ A REST API that takes a city name and returns its current weather or a 4-day for
 | GET | `/api/v1/weather/{city}` | Current conditions |
 | GET | `/api/v1/hourly_4days/{city}` | Next 4 days in 3-hour steps (32 points) |
 
-If the city can't be found you get a `404`.
+If the city can't be found you get a `404`. If OpenWeather rejects the request, for example because the API key is missing or invalid, you get a `502` with a message saying what went wrong.
 
 Example response from `GET /api/v1/weather/London`:
 

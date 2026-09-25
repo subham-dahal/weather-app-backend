@@ -10,12 +10,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.web.client.HttpClientErrorException;
 
 import com.weather.entity.HourlyForecastResponse;
 import com.weather.entity.HourlyForecastResponse.HourlyForecastPoint;
 import com.weather.entity.WeatherResponse;
 import com.weather.exception.CityNotFoundException;
+import com.weather.exception.WeatherApiException;
 import com.weather.service.WeatherService;
 
 @WebMvcTest(WeatherResource.class)
@@ -66,5 +70,15 @@ class WeatherResourceTest {
 
         mockMvc.perform(get("/api/v1/weather/Atlantis"))
                 .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void upstreamFailureReturns502() throws Exception {
+        when(weatherService.getWeather(argThat(r -> r.getCity().equals("London"))))
+                .thenThrow(new WeatherApiException(HttpClientErrorException.create(
+                        HttpStatus.UNAUTHORIZED, "Unauthorized", HttpHeaders.EMPTY, new byte[0], null)));
+
+        mockMvc.perform(get("/api/v1/weather/London"))
+                .andExpect(status().isBadGateway());
     }
 }

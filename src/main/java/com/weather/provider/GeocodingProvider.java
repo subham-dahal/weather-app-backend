@@ -12,6 +12,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.weather.domain.WeatherRequestDetails;
 import com.weather.entity.GeocodingCoordinatesEntity;
 import com.weather.exception.CityNotFoundException;
+import com.weather.exception.WeatherApiException;
 
 import org.springframework.beans.factory.annotation.Value;
 
@@ -43,7 +44,7 @@ public class GeocodingProvider {
     try{
         responseEntity = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, requestEntity, GeocodingCoordinatesEntity[].class);
     }catch(HttpStatusCodeException e){
-        throw new RuntimeException(e.getMessage(), e);
+        throw new WeatherApiException(e);
     }
     GeocodingCoordinatesEntity[] matches = responseEntity.getBody();
     if (matches == null || matches.length == 0) {

@@ -13,6 +13,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.weather.domain.CityCoordinates;
 import com.weather.entity.HourlyWeatherResponseEntity;
 import com.weather.entity.OpenWeatherResponseEntity;
+import com.weather.exception.WeatherApiException;
 
 @Service
 public class WeatherProvider {
@@ -43,7 +44,7 @@ public class WeatherProvider {
     try{
         responseEntity = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, requestEntity, OpenWeatherResponseEntity.class);
     }catch(HttpStatusCodeException e){
-        throw new RuntimeException(e.getMessage(), e);
+        throw new WeatherApiException(e);
     }
     return responseEntity.getBody();
   }
@@ -59,7 +60,7 @@ public class WeatherProvider {
     try{
         responseEntity = restTemplate.exchange(uriBuilder.toUriString(), HttpMethod.GET, requestEntity, HourlyWeatherResponseEntity.class);
     }catch(HttpStatusCodeException e){
-        throw new RuntimeException(e.getMessage(), e);
+        throw new WeatherApiException(e);
     }
     return responseEntity.getBody();
 }
